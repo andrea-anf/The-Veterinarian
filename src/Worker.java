@@ -22,7 +22,6 @@ public class Worker extends Thread{
 
     public void run(){
         try{
-            //animal = inFromClient.readLine();
             animal = myAnimal.specie();
             room.enterRoom(animal);
             Thread.sleep(10000);

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Random;
-
 public class WaitingRoom extends Thread {
     private int dogCounter;
     private boolean catPresence;
@@ -15,28 +12,20 @@ public class WaitingRoom extends Thread {
 
         switch (animal){
             case "dog":
-                if(dogCounter >= 4){
-                    wait();
-                }
-                if (catPresence == true){
-                    wait();
-                }
+//                every time a thread is notified by others, check if conditions are false
+                while (dogCounter >= 4 | catPresence == true) wait();
+
                 dogCounter++;
-                System.out.println("[+] Dog " + Thread.currentThread().getId() + " in the room: " + dogCounter);
+                System.out.println("[+] dog " + Thread.currentThread().getId() + " in the room: " + dogCounter);
 
                 break;
 
             case "cat":
-                if(dogCounter > 0){
-                    wait();
-                }
-                else if (catPresence == true){
-                    wait();
-                }
+//                every time a thread is notified by others, check if conditions are false
+                while (dogCounter > 0 | catPresence == true) wait();
 
                 catPresence = true;
-                System.out.println("[+] Cat " + Thread.currentThread().getId() + " in the room");
-
+                System.out.println("[+] cat " + Thread.currentThread().getId() + " in the room");
                 break;
         }
 
@@ -45,13 +34,15 @@ public class WaitingRoom extends Thread {
     public synchronized void exitRoom(String animal){
         switch (animal){
             case "dog":
-                System.out.println("[+] Dog " + Thread.currentThread().getId() + " is leaving the room");
                 dogCounter--;
+                System.out.println("[+] dog " + Thread.currentThread().getId() + " is leaving the room, dog(s) in the room: " + dogCounter);
+//                notify that a dog is leaving the room
                 notify();
                 break;
             case "cat":
-                System.out.println("[+] Cat " + Thread.currentThread().getId() + " is leaving the room");
                 catPresence = false;
+                System.out.println("[+] cat " + Thread.currentThread().getId() + " is leaving the room");
+//                notify that a dog is leaving the room
                 notify();
                 break;
         }
